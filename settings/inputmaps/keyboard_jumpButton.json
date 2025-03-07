@@ -1,0 +1,3 @@
+{
+  "bindings": [{ "control": "numpaddecimal", "action": "jumpButton" }]
+}

@@ -1,0 +1,17 @@
+{
+  "domElement": "<jump-button></jump-button>",
+  "name": "Jump Button",
+  "types": ["ui.apps.categories.info"],
+  "description": "jumpButton",
+  "css": {
+    "left": "500px",
+    "width": "190px",
+    "height": "60px",
+    "min-width": "190px",
+    "min-height": "60px",
+    "top": "500px"
+  },
+  "author": "Daefron",
+  "version": "0.1",
+  "directive": "jumpButton"
+}
