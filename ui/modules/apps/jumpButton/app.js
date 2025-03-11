@@ -6,13 +6,10 @@ angular.module("beamng.apps").directive("jumpButton", [
       scope: true,
       restrict: "EA",
       link: function (scope, element, attrs) {
-        scope.jumpStrength = 100;
+        scope.jumpStrength = 100; //arbitrary value
         scope.cooldown = {
-          maxTime: 100,
-          jumpReady: "Ready",
-          color: { color: "rgb(0,255,0)" },
-          boxShadow:
-            "inset 5000px 0px rgba(0, 255, 0, 0.2)",
+          maxTime: 60, // 60 per second
+          boxShadow: "inset 5000px 0px rgba(0, 255, 0, 0.2)",
         };
 
         // used when user presses jump key
@@ -25,21 +22,23 @@ angular.module("beamng.apps").directive("jumpButton", [
             return;
           }
           scope.cooldown.waiting = true;
-          scope.cooldown.jumpReady = "Not Ready";
-          scope.cooldown.color = { color: "rgb(255,0,0)" };
 
+          // gets window width for box-shadow percentage
           const windowWidth = document.getElementById("jumpButton").offsetWidth;
+          //changes box-shadow to create the "charging" animation
           scope.cooldown.boxShadow = "inset 0px 0px rgba(50, 50, 50, 0.2);";
+          
+          // loop for jump cooldown
           scope.cooldown.currentTime = 0;
           const readyLoop = setInterval(() => {
-            scope.$applyAsync(function () {
+            scope.$applyAsync(function () { // allows ui to run at high fps
               if (scope.cooldown.currentTime >= scope.cooldown.maxTime) {
                 scope.cooldown.waiting = false;
-                scope.cooldown.jumpReady = "Ready";
-                scope.cooldown.color = { color: "rgb(0,255,0)" };
                 clearInterval(readyLoop);
               }
               scope.cooldown.currentTime++;
+
+              // values for box-shadow animation
               const percentage =
                 scope.cooldown.currentTime / scope.cooldown.maxTime;
               const boxShadowValue = percentage * windowWidth;
@@ -52,11 +51,12 @@ angular.module("beamng.apps").directive("jumpButton", [
                 boxShadowColor +
                 ", 50, 0.2)";
             });
-          }, 10);
+          }, 16.666); //makes loop run in 60fps
 
           bngApi.activeObjectLua("obj:setGravity(" + scope.jumpStrength + ")");
           setTimeout(() => {
-            bngApi.activeObjectLua("obj:setGravity(-9.81)");
+            bngApi.activeObjectLua("obj:setGravity(-9.81)"); //default gravity
+            //TODO: use saved previous gravity if not on standard
           }, 50);
         }
       },

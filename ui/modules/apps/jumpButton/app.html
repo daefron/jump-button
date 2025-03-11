@@ -1,10 +1,22 @@
-<div id="jumpButton" style="width: auto; height: auto; padding: 5px; box-shadow: {{ cooldown.boxShadow }};" class="bngApp">
-  <div style="display: flex; justify-content: space-between;">
+<div
+  id="jumpButton"
+  style="width: auto; height: auto; padding: 5px; box-shadow: {{ cooldown.boxShadow }};"
+  class="bngApp"
+>
+  <div style="display: flex; justify-content: space-between">
     <span style="width: auto">Jump strength: </span>
-    <input style="width: 60px; height: 24px;" type="number" ng-model="jumpStrength" />
+    <input
+      style="width: 60px; height: 24px"
+      type="number"
+      ng-model="jumpStrength"
+    />
   </div>
-  <div style="display: flex; justify-content: space-between;">
+  <div style="display: flex; justify-content: space-between">
     <span style="width: auto">Jump delay: </span>
-    <input style="width: 60px; height: 24px;" type="number" ng-model="cooldown.maxTime" />
+    <input
+      style="width: 60px; height: 24px"
+      type="number"
+      ng-model="cooldown.maxTime"
+    />
   </div>
 </div>
