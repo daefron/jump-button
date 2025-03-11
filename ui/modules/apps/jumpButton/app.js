@@ -9,7 +9,7 @@ angular.module("beamng.apps").directive("jumpButton", [
         scope.jumpStrength = 100; //arbitrary value
         scope.cooldown = {
           maxTime: 60, // 60 per second
-          boxShadow: "inset 5000px 0px rgba(0, 255, 0, 0.2)",
+          boxShadow: "inset 5000px 0px rgba(0, 180, 0, 0.2)",
         };
 
         // used when user presses jump key
@@ -26,7 +26,7 @@ angular.module("beamng.apps").directive("jumpButton", [
           // gets window width for box-shadow percentage
           const windowWidth = document.getElementById("jumpButton").offsetWidth;
           //changes box-shadow to create the "charging" animation
-          scope.cooldown.boxShadow = "inset 0px 0px rgba(50, 50, 50, 0.2);";
+          scope.cooldown.boxShadow = "inset 0px 0px rgba(0, 0, 0, 0.2);";
           
           // loop for jump cooldown
           scope.cooldown.currentTime = 0;
@@ -43,13 +43,13 @@ angular.module("beamng.apps").directive("jumpButton", [
                 scope.cooldown.currentTime / scope.cooldown.maxTime;
               const boxShadowValue = percentage * windowWidth;
               const boxShadowColor =
-                (1 - percentage) * 255 + ", " + percentage * 255;
+                (1 - percentage) * 180 + ", " + percentage * 180;
               scope.cooldown.boxShadow =
                 "inset " +
                 boxShadowValue +
                 "px 0px rgba(" +
                 boxShadowColor +
-                ", 50, 0.2)";
+                ", 0, 0.2)";
             });
           }, 16.666); //makes loop run in 60fps
 
