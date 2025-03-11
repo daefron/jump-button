@@ -1,6 +1,6 @@
 {
-  "jumpButton": {
-    "cat": "vehicle_specific",
+  "activateJump": {
+    "cat": "jumpButton",
     "order": 1,
     "ctx": "guihooks",
     "onDown": "guihooks.trigger('activateJump')",
