@@ -5,6 +5,6 @@
     "ctx": "guihooks",
     "onDown": "guihooks.trigger('activateJump')",
     "title": "Jump Button",
-    "desc": "Makes car jump (from Jump Button mod by Daefron)"
+    "desc": "Makes car jump (from Jump Button mod by Daefron). Requires UI app to be active."
   }
 }
