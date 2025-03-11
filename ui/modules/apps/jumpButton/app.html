@@ -3,10 +3,8 @@
     <span style="width: auto">Jump strength: </span>
     <input style="width: 60px; height: 24px;" type="number" ng-model="jumpStrength" />
   </div>
-
-  <!-- <div style="display: flex; justify-content: space-between">
-    <span>Jump ready: </span>
-    <span ng-style="cooldown.color">{{ !cooldown.waiting }}</span>
-  </div> -->
-  <!-- <div style="width:{{ (cooldown.currentTime / cooldown.maxTime) * 100 }}%; height:5px; background-color:red;"></div> -->
+  <div style="display: flex; justify-content: space-between;">
+    <span style="width: auto">Jump delay: </span>
+    <input style="width: 60px; height: 24px;" type="number" ng-model="cooldown.maxTime" />
+  </div>
 </div>
