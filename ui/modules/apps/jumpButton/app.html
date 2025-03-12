@@ -9,6 +9,7 @@
       style="width: 60px; height: 24px"
       type="number"
       ng-model="jumpStrength"
+      ng-change="storeSettings()"
     />
   </div>
   <div style="display: flex; justify-content: space-between">
@@ -17,6 +18,7 @@
       style="width: 60px; height: 24px"
       type="number"
       ng-model="cooldown.maxTime"
+      ng-change="storeSettings()"
     />
   </div>
 </div>

@@ -5,19 +5,30 @@ angular.module("beamng.apps").directive("jumpButton", [
       replace: true,
       scope: true,
       restrict: "EA",
-      link: function (scope, element, attrs) {
-        scope.jumpStrength = 100; //arbitrary value
+      link: function (scope) {
+        // gets previous UI values from Lua
+        bngApi.engineLua("extensions.jumpButton.sendSettings()");
+        scope.$on("RetrieveSettings", function (_, data) {
+          scope.jumpStrength = data.strength;
+          scope.cooldown.maxTime = data.delay;
+        });
+
+        // sends current UI values to Lua on input change
+        scope.storeSettings = function () {
+          const currentSettings = [scope.jumpStrength, scope.cooldown.maxTime];
+          bngApi.engineLua(
+            "extensions.jumpButton.storeSettings(" + currentSettings + ")"
+          );
+        };
+
+        // gives cooldown animation an initial value
         scope.cooldown = {
-          maxTime: 60, // 60 per second
           boxShadow: "inset 5000px 0px rgba(255, 255, 255, 0.3)",
         };
 
         // used when user presses jump key
-        scope.$on("activateJump", function (_, data) {
-          activateJump();
-        });
-
-        function activateJump() {
+        scope.$on("activateJump", function () {
+          // stops player from jumping faster than delay value
           if (scope.cooldown.waiting) {
             return;
           }
@@ -34,20 +45,20 @@ angular.module("beamng.apps").directive("jumpButton", [
               clearInterval(readyLoop);
             }
 
-            // values for box-shadow animation
+            // values for cooldown animation
             const percentage =
               scope.cooldown.currentTime / scope.cooldown.maxTime;
             const sizeValue = Math.round(percentage * windowWidth) + "px 0px ";
             const colorValue = "rgba(255, 255, 255, " + percentage * 0.25;
 
-            // allows ui updates to be in high fps
+            // async allows ui updates to be in high fps
             scope.$applyAsync(function () {
               scope.cooldown.boxShadow =
                 "inset " + sizeValue + colorValue + ")";
             });
 
             scope.cooldown.currentTime++;
-          }, 16.666); //makes loop run in 60fps
+          }, 16.666); //makes loop run at 60fps
 
           // creates jump particle effect
           bngApi.engineLua("extensions.jumpButton.createDust()");
@@ -61,7 +72,7 @@ angular.module("beamng.apps").directive("jumpButton", [
             bngApi.activeObjectLua("obj:setGravity(-9.81)"); //default gravity
             //TODO: use saved previous gravity if not on standard
           }, 50);
-        }
+        });
       },
     };
   },

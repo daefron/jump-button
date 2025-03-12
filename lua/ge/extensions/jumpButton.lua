@@ -26,10 +26,31 @@ local function removeDust()
     jumpDust.active = false
 end
 
+
+local currentSettings = {
+    strength = 100,
+    delay = 60
+}
+
+local function storeSettings(updatedStrength, updatedDelay)
+    currentSettings = {
+        strength = updatedStrength,
+        delay = updatedDelay
+    }
+end
+
+local function sendSettings()
+    guihooks.trigger('RetrieveSettings', currentSettings)
+end
+
 M.onExtensionLoaded = extensionLoaded
 M.onExtensionUnloaded = extensionUnloaded
 
 M.createDust = createDust
 M.removeDust = removeDust
+
+
+M.storeSettings = storeSettings
+M.sendSettings = sendSettings
 
 return M
