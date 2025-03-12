@@ -55,6 +55,11 @@ local function sendSettings()
     guihooks.trigger('RetrieveSettings', currentSettings)
 end
 
+local function activateJump(gravity)
+    local player = be:getPlayerVehicle(0)
+    player:queueLuaCommand("obj:setGravity(".. gravity ..")")
+end
+
 M.onExtensionLoaded = extensionLoaded
 M.onExtensionUnloaded = extensionUnloaded
 
@@ -65,5 +70,7 @@ M.createSound = createSound
 
 M.storeSettings = storeSettings
 M.sendSettings = sendSettings
+
+M.activateJump = activateJump
 
 return M

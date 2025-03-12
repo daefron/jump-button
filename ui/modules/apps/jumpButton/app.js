@@ -67,12 +67,16 @@ angular.module("beamng.apps").directive("jumpButton", [
           bngApi.engineLua("extensions.jumpButton.createSound()");
 
           // sets gravity to desired strength
-          bngApi.activeObjectLua("obj:setGravity(" + scope.jumpStrength + ")");
+          bngApi.engineLua(
+            "extensions.jumpButton.activateJump(" + scope.jumpStrength + ")"
+          );
 
           // resets gravity and stops dust after delay
           setTimeout(() => {
             bngApi.engineLua("extensions.jumpButton.removeDust()");
-            bngApi.activeObjectLua("obj:setGravity(-9.81)"); //default gravity
+            bngApi.engineLua(
+              "extensions.jumpButton.activateJump(-9.81)"
+            );
             //TODO: use saved previous gravity if not on standard
           }, 50);
         });
