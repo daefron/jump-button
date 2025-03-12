@@ -57,7 +57,7 @@ end
 
 local function activateJump(gravity)
     local player = be:getPlayerVehicle(0)
-    player:queueLuaCommand("obj:setGravity(".. gravity ..")")
+    player:queueLuaCommand("obj:setGravity(" .. gravity .. ")")
 end
 
 M.onExtensionLoaded = extensionLoaded

@@ -6,6 +6,18 @@ angular.module("beamng.apps").directive("jumpButton", [
       scope: true,
       restrict: "EA",
       link: function (scope) {
+        var streamsList = ["sensors"];
+        StreamsManager.add(streamsList);
+        scope.$on("$destroy", function () {
+          StreamsManager.remove(streamsList);
+        });
+
+        // saves current gravity to reset to after jump
+        let currentGravity;
+        scope.$on("streamsUpdate", function (_, streams) {
+          currentGravity = streams.sensors.gravity;
+        });
+
         // gets previous UI values from Lua
         bngApi.engineLua("extensions.jumpButton.sendSettings()");
         scope.$on("RetrieveSettings", function (_, data) {
@@ -33,6 +45,8 @@ angular.module("beamng.apps").directive("jumpButton", [
             return;
           }
           scope.cooldown.waiting = true;
+
+          const initialGravity = currentGravity;
 
           // gets window width for box-shadow percentage
           const windowWidth = document.getElementById("jumpButton").offsetWidth;
@@ -75,7 +89,7 @@ angular.module("beamng.apps").directive("jumpButton", [
           setTimeout(() => {
             bngApi.engineLua("extensions.jumpButton.removeDust()");
             bngApi.engineLua(
-              "extensions.jumpButton.activateJump(-9.81)"
+              "extensions.jumpButton.activateJump(" + initialGravity + ")"
             );
             //TODO: use saved previous gravity if not on standard
           }, 50);
