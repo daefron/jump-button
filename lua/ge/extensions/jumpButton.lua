@@ -26,6 +26,18 @@ local function removeDust()
     jumpDust.active = false
 end
 
+local jumpSound
+
+local function createSound()
+    jumpSound = createObject("SFXEmitter")
+    jumpSound.fileName = String('/art/sound/tire_burst.ogg') -- desired sound effect
+    jumpSound.isLooping = false
+    jumpSound:registerObject('jumpSound' .. math.random())
+
+    -- set position of sound under player car
+    local playerPosition = be:getPlayerVehicle(0):getPosition()
+    jumpSound:setPosition(vec3(playerPosition.x, playerPosition.y, playerPosition.z))
+end
 
 local currentSettings = {
     strength = 100,
@@ -49,6 +61,7 @@ M.onExtensionUnloaded = extensionUnloaded
 M.createDust = createDust
 M.removeDust = removeDust
 
+M.createSound = createSound
 
 M.storeSettings = storeSettings
 M.sendSettings = sendSettings

@@ -63,6 +63,9 @@ angular.module("beamng.apps").directive("jumpButton", [
           // creates jump particle effect
           bngApi.engineLua("extensions.jumpButton.createDust()");
 
+          // creates jump sound effect
+          bngApi.engineLua("extensions.jumpButton.createSound()");
+
           // sets gravity to desired strength
           bngApi.activeObjectLua("obj:setGravity(" + scope.jumpStrength + ")");
 
