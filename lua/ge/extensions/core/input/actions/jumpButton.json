@@ -2,8 +2,8 @@
   "activateJump": {
     "cat": "jumpButton",
     "order": 1,
-    "ctx": "guihooks",
-    "onDown": "guihooks.trigger('activateJump')",
+    "ctx": "tlua",
+    "onDown": "jumpButton.activateJump()",
     "title": "Jump Button",
     "desc": "Makes car jump (from Jump Button mod by Daefron). Requires UI app to be active."
   }

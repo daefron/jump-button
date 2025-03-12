@@ -1,5 +1,7 @@
 local M = {}
 
+local player
+
 local function extensionLoaded()
     log("D", "extensionLoaded", "Called")
 end
@@ -18,7 +20,7 @@ local function createDust()
     jumpDust:registerObject('jumpDust' .. math.random())
 
     -- set position of dust under player car
-    local playerPosition = be:getPlayerVehicle(0):getPosition()
+    local playerPosition = player:getPosition()
     jumpDust:setPosition(vec3(playerPosition.x, playerPosition.y, playerPosition.z))
 end
 
@@ -35,42 +37,80 @@ local function createSound()
     jumpSound:registerObject('jumpSound' .. math.random())
 
     -- set position of sound under player car
-    local playerPosition = be:getPlayerVehicle(0):getPosition()
+    local playerPosition = player:getPosition()
     jumpSound:setPosition(vec3(playerPosition.x, playerPosition.y, playerPosition.z))
 end
 
 local currentSettings = {
     strength = 100,
-    delay = 60
+    delay = 60,
+    initialGravity = -9.81
 }
 
 local function storeSettings(updatedStrength, updatedDelay)
-    currentSettings = {
-        strength = updatedStrength,
-        delay = updatedDelay
-    }
+    currentSettings.strength = updatedStrength
+    currentSettings.delay = updatedDelay
 end
 
 local function sendSettings()
     guihooks.trigger('RetrieveSettings', currentSettings)
 end
 
-local function activateJump(gravity)
-    local player = be:getPlayerVehicle(0)
-    player:queueLuaCommand("obj:setGravity(" .. gravity .. ")")
+local resetTimer = 0
+local resetTimerActive
+
+local delayTimer = 0
+local delayTimerActive
+
+local function onGuiUpdate()
+    -- timer for resetting gravity/effects after jump
+    if (resetTimerActive) then
+        resetTimer = resetTimer + 1
+        if (resetTimer >= 3) then
+            player:queueLuaCommand("obj:setGravity(" .. currentSettings.initialGravity .. ")")
+            removeDust()
+            resetTimer = 0
+            resetTimerActive = false
+        end
+    end
+    -- timer for stopping player from jumping while delay active
+    if (delayTimerActive) then
+        delayTimer = delayTimer + 1
+        if (delayTimer >= currentSettings.delay / 2) then
+            delayTimer = 0
+            delayTimerActive = false
+        end
+    end
+end
+
+local function activateJump(currentGravity)
+    if (delayTimerActive) then
+        return
+    end
+
+    -- currently not used, saves old gravity setting
+    if (currentGravity) then
+        currentSettings.initialGravity = currentGravity
+    end
+    
+    resetTimerActive = true
+    delayTimerActive = true
+    
+    player = be:getPlayerVehicle(0)
+    player:queueLuaCommand("obj:setGravity(" .. currentSettings.strength .. ")")
+    createDust()
+    createSound()
+    guihooks.trigger('ActivateJump') -- makes UI run animation
 end
 
 M.onExtensionLoaded = extensionLoaded
 M.onExtensionUnloaded = extensionUnloaded
 
-M.createDust = createDust
-M.removeDust = removeDust
-
-M.createSound = createSound
-
 M.storeSettings = storeSettings
 M.sendSettings = sendSettings
 
 M.activateJump = activateJump
+
+M.onGuiUpdate = onGuiUpdate
 
 return M

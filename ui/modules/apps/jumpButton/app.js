@@ -39,15 +39,7 @@ angular.module("beamng.apps").directive("jumpButton", [
         };
 
         // used when user presses jump key
-        scope.$on("activateJump", function () {
-          // stops player from jumping faster than delay value
-          if (scope.cooldown.waiting) {
-            return;
-          }
-          scope.cooldown.waiting = true;
-
-          const initialGravity = currentGravity;
-
+        scope.$on("ActivateJump", function () {
           // gets window width for box-shadow percentage
           const windowWidth = document.getElementById("jumpButton").offsetWidth;
 
@@ -73,26 +65,6 @@ angular.module("beamng.apps").directive("jumpButton", [
 
             scope.cooldown.currentTime++;
           }, 16.666); //makes loop run at 60fps
-
-          // creates jump particle effect
-          bngApi.engineLua("extensions.jumpButton.createDust()");
-
-          // creates jump sound effect
-          bngApi.engineLua("extensions.jumpButton.createSound()");
-
-          // sets gravity to desired strength
-          bngApi.engineLua(
-            "extensions.jumpButton.activateJump(" + scope.jumpStrength + ")"
-          );
-
-          // resets gravity and stops dust after delay
-          setTimeout(() => {
-            bngApi.engineLua("extensions.jumpButton.removeDust()");
-            bngApi.engineLua(
-              "extensions.jumpButton.activateJump(" + initialGravity + ")"
-            );
-            //TODO: use saved previous gravity if not on standard
-          }, 50);
         });
       },
     };
