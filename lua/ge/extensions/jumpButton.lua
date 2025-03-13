@@ -83,18 +83,17 @@ local function onGuiUpdate()
     end
 end
 
-local function activateJump(currentGravity)
+local function activateJump()
     if (delayTimerActive) then
         return
     end
 
-    -- currently not used, saves old gravity setting
-    if (currentGravity) then
-        currentSettings.initialGravity = currentGravity
-    end
-    
     resetTimerActive = true
     delayTimerActive = true
+
+    -- saves old gravity setting
+    local initialGravity = core_environment.getGravity()
+    currentSettings.initialGravity = initialGravity
     
     player = be:getPlayerVehicle(0)
     player:queueLuaCommand("obj:setGravity(" .. currentSettings.strength .. ")")

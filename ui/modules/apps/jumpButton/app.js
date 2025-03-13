@@ -6,18 +6,6 @@ angular.module("beamng.apps").directive("jumpButton", [
       scope: true,
       restrict: "EA",
       link: function (scope) {
-        var streamsList = ["sensors"];
-        StreamsManager.add(streamsList);
-        scope.$on("$destroy", function () {
-          StreamsManager.remove(streamsList);
-        });
-
-        // saves current gravity to reset to after jump
-        let currentGravity;
-        scope.$on("streamsUpdate", function (_, streams) {
-          currentGravity = streams.sensors.gravity;
-        });
-
         // gets previous UI values from Lua
         bngApi.engineLua("extensions.jumpButton.sendSettings()");
         scope.$on("RetrieveSettings", function (_, data) {
