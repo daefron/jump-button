@@ -13,9 +13,27 @@ angular.module("beamng.apps").directive("jumpButton", [
           scope.cooldown.maxTime = data.delay;
         });
 
+        // gives cooldown animation an initial value
+        scope.cooldown = {
+          boxShadow: "inset 5000px 0px rgba(255, 255, 255, 0.3)",
+        };
+
         // updates value used for delay animation
         scope.$on("RetrieveTime", function (_, data) {
-          scope.cooldown.delayTime = data;
+          const delayTime = data;
+
+          // gets window width for box-shadow percentage
+          const windowWidth = document.getElementById("jumpButton").offsetWidth;
+
+          // values for cooldown animation
+          const percentage = delayTime / (scope.cooldown.maxTime / 120);
+          const sizeValue = Math.round(percentage * windowWidth) + "px 0px ";
+          const colorValue = "rgba(255, 255, 255, " + percentage * 0.25;
+
+          // async allows ui updates to be in high fps
+          scope.$applyAsync(function () {
+            scope.cooldown.boxShadow = "inset " + sizeValue + colorValue + ")";
+          });
         });
 
         // sends current UI values to Lua on input change
@@ -25,42 +43,6 @@ angular.module("beamng.apps").directive("jumpButton", [
             "extensions.jumpButton.storeSettings(" + currentSettings + ")"
           );
         };
-
-        // gives cooldown animation an initial value
-        scope.cooldown = {
-          boxShadow: "inset 5000px 0px rgba(255, 255, 255, 0.3)",
-        };
-
-        // used when user presses jump key
-        scope.$on("ActivateJump", function () {
-          // gets window width for box-shadow percentage
-          const windowWidth = document.getElementById("jumpButton").offsetWidth;
-
-          if (scope.cooldown.delayTime >= scope.cooldown.maxTime / 120) {
-            scope.cooldown.delayTime = 0;
-          }
-
-          // loop for jump cooldown
-          const readyLoop = setInterval(() => {
-            // values for cooldown animation
-            const percentage =
-              scope.cooldown.delayTime / (scope.cooldown.maxTime / 120);
-            const sizeValue = Math.round(percentage * windowWidth) + "px 0px ";
-            const colorValue = "rgba(255, 255, 255, " + percentage * 0.25;
-
-            // async allows ui updates to be in high fps
-            scope.$applyAsync(function () {
-              scope.cooldown.boxShadow =
-                "inset " + sizeValue + colorValue + ")";
-            });
-
-            if (scope.cooldown.delayTime >= scope.cooldown.maxTime / 120) {
-              clearInterval(readyLoop);
-            }
-
-            scope.cooldown.currentTime++;
-          }, 16.666); //makes loop run at 60fps
-        });
       },
     };
   },
