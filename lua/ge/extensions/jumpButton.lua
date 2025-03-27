@@ -44,7 +44,6 @@ end
 local currentSettings = {
     strength = 100,
     delay = 60,
-    initialGravity = -9.81
 }
 
 local function storeSettings(updatedStrength, updatedDelay)
@@ -67,7 +66,6 @@ local function onGuiUpdate()
     if (resetTimerActive) then
         resetTimer = resetTimer + 1
         if (resetTimer >= 3) then
-            player:queueLuaCommand("obj:setGravity(" .. currentSettings.initialGravity .. ")")
             removeDust()
             resetTimer = 0
             resetTimerActive = false
@@ -91,12 +89,8 @@ local function activateJump()
     resetTimerActive = true
     delayTimerActive = true
 
-    -- saves old gravity setting
-    local initialGravity = core_environment.getGravity()
-    currentSettings.initialGravity = initialGravity
-    
     player = be:getPlayerVehicle(0)
-    player:queueLuaCommand("obj:setGravity(" .. currentSettings.strength .. ")")
+    player:applyClusterVelocityScaleAdd(player:getRefNodeId(), 1, 0, 0, currentSettings.strength / 20)
     createDust()
     createSound()
     guihooks.trigger('ActivateJump') -- makes UI run animation
