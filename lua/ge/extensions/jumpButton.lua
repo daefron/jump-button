@@ -67,7 +67,7 @@ local function onGuiUpdate(dt)
     -- timer for resetting effects after jump
     if (resetTimerActive) then
         resetTimer = resetTimer + dt
-        if (resetTimer >= 1) then
+        if (resetTimer >= 0.1) then
             removeDust()
             resetTimer = 0
             resetTimerActive = false
@@ -93,7 +93,9 @@ local function activateJump()
     delayTimerActive = true
 
     player = be:getPlayerVehicle(0)
-    player:applyClusterVelocityScaleAdd(player:getRefNodeId(), 1, 0, 0, currentSettings.strength / 20)
+    local rot = quatFromDir(-vec3(player:getDirectionVector()), vec3(player:getDirectionVectorUp()))
+    local force = vec3(0, 0, currentSettings.strength / 15):rotated(rot)
+    player:applyClusterVelocityScaleAdd(player:getRefNodeId(), 1, force.x, force.y, force.z)
     createDust()
     createSound()
     guihooks.trigger('ActivateJump') -- makes UI run animation
