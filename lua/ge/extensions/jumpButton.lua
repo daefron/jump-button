@@ -43,7 +43,7 @@ end
 
 local currentSettings = {
     strength = 100,
-    delay = 60,
+    delay = 60
 }
 
 local function storeSettings(updatedStrength, updatedDelay)
@@ -61,11 +61,13 @@ local resetTimerActive
 local delayTimer = 0
 local delayTimerActive
 
-local function onGuiUpdate()
-    -- timer for resetting gravity/effects after jump
+local testTime = 0
+
+local function onGuiUpdate(dt)
+    -- timer for resetting effects after jump
     if (resetTimerActive) then
-        resetTimer = resetTimer + 1
-        if (resetTimer >= 3) then
+        resetTimer = resetTimer + dt
+        if (resetTimer >= 1) then
             removeDust()
             resetTimer = 0
             resetTimerActive = false
@@ -73,8 +75,9 @@ local function onGuiUpdate()
     end
     -- timer for stopping player from jumping while delay active
     if (delayTimerActive) then
-        delayTimer = delayTimer + 1
-        if (delayTimer >= currentSettings.delay / 2) then
+        delayTimer = delayTimer + dt
+        guihooks.trigger('RetrieveTime', delayTimer)
+        if (delayTimer >= currentSettings.delay / 120) then
             delayTimer = 0
             delayTimerActive = false
         end

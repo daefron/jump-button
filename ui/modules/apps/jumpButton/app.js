@@ -13,6 +13,11 @@ angular.module("beamng.apps").directive("jumpButton", [
           scope.cooldown.maxTime = data.delay;
         });
 
+        // updates value used for delay animation
+        scope.$on("RetrieveTime", function (_, data) {
+          scope.cooldown.delayTime = data;
+        });
+
         // sends current UI values to Lua on input change
         scope.storeSettings = function () {
           const currentSettings = [scope.jumpStrength, scope.cooldown.maxTime];
@@ -31,17 +36,15 @@ angular.module("beamng.apps").directive("jumpButton", [
           // gets window width for box-shadow percentage
           const windowWidth = document.getElementById("jumpButton").offsetWidth;
 
-          // loop for jump cooldown
-          scope.cooldown.currentTime = 0;
-          const readyLoop = setInterval(() => {
-            if (scope.cooldown.currentTime >= scope.cooldown.maxTime) {
-              scope.cooldown.waiting = false;
-              clearInterval(readyLoop);
-            }
+          if (scope.cooldown.delayTime >= scope.cooldown.maxTime / 120) {
+            scope.cooldown.delayTime = 0;
+          }
 
+          // loop for jump cooldown
+          const readyLoop = setInterval(() => {
             // values for cooldown animation
             const percentage =
-              scope.cooldown.currentTime / scope.cooldown.maxTime;
+              scope.cooldown.delayTime / (scope.cooldown.maxTime / 120);
             const sizeValue = Math.round(percentage * windowWidth) + "px 0px ";
             const colorValue = "rgba(255, 255, 255, " + percentage * 0.25;
 
@@ -50,6 +53,10 @@ angular.module("beamng.apps").directive("jumpButton", [
               scope.cooldown.boxShadow =
                 "inset " + sizeValue + colorValue + ")";
             });
+
+            if (scope.cooldown.delayTime >= scope.cooldown.maxTime / 120) {
+              clearInterval(readyLoop);
+            }
 
             scope.cooldown.currentTime++;
           }, 16.666); //makes loop run at 60fps
