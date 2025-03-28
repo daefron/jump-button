@@ -61,7 +61,7 @@ local resetTimerActive
 local delayTimer = 0
 local delayTimerActive
 
-local function onGuiUpdate(dt)
+local function onUpdate(dt)
     -- timer for resetting effects after jump
     if (resetTimerActive) then
         resetTimer = resetTimer + dt
@@ -75,7 +75,7 @@ local function onGuiUpdate(dt)
     if (delayTimerActive) then
         delayTimer = delayTimer + dt
         guihooks.trigger('RetrieveTime', delayTimer)
-        if (delayTimer >= currentSettings.delay / 120) then
+        if (delayTimer >= currentSettings.delay / 60) then
             delayTimer = 0
             delayTimerActive = false
         end
@@ -108,6 +108,6 @@ M.sendSettings = sendSettings
 
 M.activateJump = activateJump
 
-M.onGuiUpdate = onGuiUpdate
+M.onUpdate = onUpdate
 
 return M

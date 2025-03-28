@@ -26,7 +26,7 @@ angular.module("beamng.apps").directive("jumpButton", [
           const windowWidth = document.getElementById("jumpButton").offsetWidth;
 
           // values for cooldown animation
-          const percentage = delayTime / (scope.cooldown.maxTime / 120);
+          const percentage = delayTime / (scope.cooldown.maxTime / 60);
           const sizeValue = Math.round(percentage * windowWidth) + "px 0px ";
           const colorValue = "rgba(255, 255, 255, " + percentage * 0.25;
 
