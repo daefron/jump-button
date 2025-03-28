@@ -20,8 +20,8 @@ local function createDust()
     jumpDust:registerObject('jumpDust' .. math.random())
 
     -- set position of dust under player car
-    local playerPosition = player:getPosition()
-    jumpDust:setPosition(vec3(playerPosition.x, playerPosition.y, playerPosition.z))
+    local playerPosition = vec3(player:getPosition())
+    jumpDust:setPosition(playerPosition)
 end
 
 local function removeDust()
@@ -37,8 +37,8 @@ local function createSound()
     jumpSound:registerObject('jumpSound' .. math.random())
 
     -- set position of sound under player car
-    local playerPosition = player:getPosition()
-    jumpSound:setPosition(vec3(playerPosition.x, playerPosition.y, playerPosition.z))
+    local playerPosition = vec3(player:getPosition())
+    jumpSound:setPosition(playerPosition)
 end
 
 local currentSettings = {
