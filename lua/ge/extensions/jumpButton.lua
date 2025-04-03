@@ -52,7 +52,7 @@ local function storeSettings(updatedStrength, updatedDelay)
 end
 
 local function sendSettings()
-    guihooks.trigger('RetrieveSettings', currentSettings)
+    guihooks.trigger('RetrieveJumpSettings', currentSettings)
 end
 
 local resetTimer = 0
@@ -74,7 +74,7 @@ local function onUpdate(dt)
     -- timer for stopping player from jumping while delay active
     if (delayTimerActive) then
         delayTimer = delayTimer + dt
-        guihooks.trigger('RetrieveTime', delayTimer)
+        guihooks.trigger('RetrieveJumpTime', delayTimer)
         if (delayTimer >= currentSettings.delay / 60) then
             delayTimer = 0
             delayTimerActive = false
@@ -97,7 +97,6 @@ local function activateJump()
 
     createDust()
     createSound()
-    guihooks.trigger('ActivateJump') -- makes UI run animation
 end
 
 M.onExtensionLoaded = extensionLoaded

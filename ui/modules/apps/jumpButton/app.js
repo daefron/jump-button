@@ -8,7 +8,7 @@ angular.module("beamng.apps").directive("jumpButton", [
       link: function (scope) {
         // gets previous UI values from Lua
         bngApi.engineLua("extensions.jumpButton.sendSettings()");
-        scope.$on("RetrieveSettings", function (_, data) {
+        scope.$on("RetrieveJumpSettings", function (_, data) {
           scope.jumpStrength = data.strength;
           scope.cooldown.maxTime = data.delay;
         });
@@ -19,7 +19,7 @@ angular.module("beamng.apps").directive("jumpButton", [
         };
 
         // updates value used for delay animation
-        scope.$on("RetrieveTime", function (_, data) {
+        scope.$on("RetrieveJumpTime", function (_, data) {
           const delayTime = data;
 
           // gets window width for box-shadow percentage
